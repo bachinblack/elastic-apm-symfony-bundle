@@ -34,7 +34,7 @@ class AdaptiveInteractor implements ElasticApmInteractorInterface
 
     public function __construct(ElasticApmInteractorInterface $real, ElasticApmInteractorInterface $fake)
     {
-        $this->interactor = \extension_loaded('elastic_apm') ? $real : $fake;
+        $this->interactor = \extension_loaded('elastic_apm') && ini_get('elastic_apm.enabled') ? $real : $fake;
     }
 
     public function setTransactionName(string $name): bool

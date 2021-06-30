@@ -41,7 +41,7 @@ class ElasticApmExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
         $container->setAlias(ElasticApmInteractorInterface::class, $this->getInteractorServiceId($config))->setPublic(false);
@@ -85,18 +85,19 @@ class ElasticApmExtension extends Extension
 
     private function getInteractorServiceId(array $config): string
     {
-        if (! $config['enabled']) {
+        if (!$config['enabled']) {
             return BlackholeInteractor::class;
         }
 
-        if (! isset($config['interactor'])) {
+        if (!isset($config['interactor'])) {
             // Fallback on AdaptiveInteractor.
             return AdaptiveInteractor::class;
         }
 
         if ('auto' === $config['interactor']) {
+
             // Check if the extension is loaded or not
-            return \extension_loaded('elastic_apm') ? ElasticApmInteractor::class : BlackholeInteractor::class;
+            return \extension_loaded('elastic_apm') && ini_get('elastic_apm.enabled') ? ElasticApmInteractor::class : BlackholeInteractor::class;
         }
 
         return $config['interactor'];
@@ -112,7 +113,7 @@ class ElasticApmExtension extends Extension
             case 'uri':
                 return UriNamingStrategy::class;
             case 'service':
-                if (! isset($config['http']['transaction_naming_service'])) {
+                if (!isset($config['http']['transaction_naming_service'])) {
                     throw new \LogicException('When using the "service", transaction naming scheme, the "transaction_naming_service" config parameter must be set.');
                 }
 
