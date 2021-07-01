@@ -97,7 +97,7 @@ class ElasticApmExtension extends Extension
         if ('auto' === $config['interactor']) {
 
             // Check if the extension is loaded or not
-            return \extension_loaded('elastic_apm') && ini_get('elastic_apm.enabled') ? ElasticApmInteractor::class : BlackholeInteractor::class;
+            return \extension_loaded('elastic_apm') && class_exists('Elastic\Apm\ElasticApm') ? ElasticApmInteractor::class : BlackholeInteractor::class;
         }
 
         return $config['interactor'];
