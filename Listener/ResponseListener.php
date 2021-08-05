@@ -41,7 +41,7 @@ class ResponseListener implements EventSubscriberInterface
 
     public function onKernelResponse(KernelResponseEvent $event): void
     {
-        if (! $event->isMasterRequest()) {
+        if (! $event->isMainRequest()) {
             return;
         }
 
